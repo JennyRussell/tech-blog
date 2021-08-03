@@ -6,6 +6,7 @@ class User extends Model {
     passwordCheck(passwordLogin) {
         return bcrypt.compareSync(passwordLogin, this.password);
     }
+
 }
 
 User.init(
@@ -44,10 +45,15 @@ User.init(
 
 {
     hooks: {
-        beforeCreate: async (newUser) => {
-            newUser.password = await bcrypt.hash(NewUser.password, 10);
-            return NewUser;
+        beforeCreate: async (newUserData) => {
+            newUserData.password = await bcrypt.hash(newUserData.password, 10);
+            return newUserData;
         },
+
+        beforeUpdate: async (updatedUserData) => {
+            updatedUserData.password = await bcrypt.hash(updatedUserData.password, 10);
+            return updatedUserData;
+          }
     },
     sequelize,
     timestamps: false,

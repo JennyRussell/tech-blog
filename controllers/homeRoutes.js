@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { User, BlogPost } = require("../models");
-const withAuth = require("../utils/auth");
+// const withAuth = require("../utils/auth");
 
 
 //homepage
@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
     const posts = allBlogs.map((postInfo) => postInfo.get({ plain: true }));
     const userId = await User.findAll();
     console.log(req.user)
-    res.render("home", {
+    res.render("homepage", {
       posts,       
       id: req.user,
       loggedIn: req.session.loggedIn,
