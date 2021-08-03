@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "username": "star",
+    "name": "Jenny Parker",
+    "email": "jenny@gmail.com",
+    "password": "abc123"
+  },
+  {
+    "id": 2,
+    "username": "teardrop",
+    "name": "Hisoka Morrow",
+    "email": "hisoka@gmail.com",
+    "password": "bungeegum"
+  }
+]
