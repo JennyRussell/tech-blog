@@ -1,15 +1,18 @@
 const router = require("express").Router();
-const { User, BlogPost } = require("../models");
+const { BlogPost, User } = require("../models");
 // const withAuth = require("../utils/auth");
 
 
 //homepage
 router.get("/", async (req, res) => {
+
   try {
     const allBlogs = await BlogPost.findAll({ include: User});
     const posts = allBlogs.map((postInfo) => postInfo.get({ plain: true }));
     const userId = await User.findAll();
     console.log(req.user)
+  
+
     res.render("homepage", {
       posts,       
       id: req.user,
@@ -31,13 +34,13 @@ router.get("/login", (req, res) => {
   res.render("login");
 });
 
-router.get("/register", (req, res) => {
+router.get("/signup", (req, res) => {
   if (req.session.loggedIn) {
     res.redirect("/");
     return;
   }
 
-  res.render("register");
+  res.render("signup");
 });
 
 //register user
@@ -65,20 +68,20 @@ router.post("/register", async (req, res) => {
 // login user
 router.post("/login", async (req, res) => {
   try {
-    const databaseUser = await User.findOne({
+
+    const user = await User.findOne({
       where: {
-        email: req.body.email,
+        username: req.body.username,
       },
     });
 
-    if (!databaseUser) {
+    if (!user) {
       res
         .status(400)
         .json({ message: "Please enter the correct email." });
       return;
     }
-
-    const correctPass = await databaseUser.checkPassword(req.body.password);
+    const correctPass = await user.checkPassword(req.body.password);
 
     if (!correctPass) {
       res
@@ -92,9 +95,13 @@ router.post("/login", async (req, res) => {
 
       res
         .status(200)
-        .json({ user: dbUserData, message: "Login successful." });
+        .json({ user: user, message: "Login successful." });
+        
+      console.log(res);  
+      return;
     });
   } catch (err) {
+    console.log("error");
     console.log(err);
     res.status(500).json(err);
   }
@@ -102,11 +109,13 @@ router.post("/login", async (req, res) => {
 
 // logout user
 router.post("/logout", (req, res) => {
+  console.log(req.session.loggedIn);
   if (req.session.loggedIn) {
     req.session.destroy(() => {
       res.status(204).end();
     });
   } else {
+    console.log(res);
     res.status(404).end();
   }
 });

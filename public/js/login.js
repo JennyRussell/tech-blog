@@ -3,8 +3,11 @@ const loginFormHandler = async function(event) {
   
     const usernameEl = document.querySelector('#username-input-login');
     const passwordEl = document.querySelector('#password-input-login');
-  
-    const response = await fetch('/api/user/login', {
+    console.log(usernameEl);
+    console.log(passwordEl);
+    console.log(usernameEl.value);
+    console.log(passwordEl.value);
+    const response = await fetch('/login', {
       method: 'POST',
       body: JSON.stringify({
         username: usernameEl.value,
@@ -16,6 +19,7 @@ const loginFormHandler = async function(event) {
     if (response.ok) {
       document.location.replace('/dashboard');
     } else {
+      console.log(response);
       alert('Failed to login');
     }
   };
